@@ -47,8 +47,51 @@ public class Calculate {
 		return (a * c) + (variable) +"^2+" + ((a*d) + (b*c))+(variable) + (b*d);
 	}
 	
-	public static boolean isDividibleBy () {
-		boolean isDivisible = false;
+	public static boolean isDivisibleBy (int numberOne, int numberTwo) {
+		if (numberOne % numberTwo == 0) {
+			return true;
+		}else {
+			return false;
+		}
 	}
+	
+	public static double absValue (double n) {
+		if (n<0) {
+			return n * (-1);
+			
+		}else {
+			return n;
+		}
+	}
+	
+	public static double max ( double valueOne, double valueTwo, double valueThree) {
+		if (valueThree<valueTwo && valueOne<valueTwo) {
+			return valueTwo;
+		}else{
+			if (valueTwo<valueOne && valueThree<valueOne) {
+				return valueOne;
+			}else {
+				return valueThree;
+			}
+		}
+	}
+	
+	public static int min (int numOne, int numTwo) {
+		if (numOne < numTwo) {
+			return numOne;
+		}else{
+				return numTwo;
+		}
+	}
+	
+	public static double round2 (double decimal) {
+		decimal = (decimal * 100) + 0.5;
+		decimal = (int)decimal;
+		decimal = (double)decimal;
+		decimal = decimal/100;
+		return decimal;
+	}
+	
+	
 }	
 	
