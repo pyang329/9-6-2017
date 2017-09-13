@@ -92,6 +92,26 @@ public class Calculate {
 		return decimal;
 	}
 	
+	public static double exponent (double base,int power) {
+		double multiplier = base;
+		for (int i = 2; i <= power; i++){
+			base = base * multiplier;
+		}
+		return base;
+	}
+	
+	public static int factorial (int a) {
+		int num = 1;
+		for (int i = a ; i > 0; i--) {
+			num *= i;
+		}
+		return num;
+	}
+	
+	public static boolean isPrime (int x) {
+		
+	}
+	
 	
 }	
 	

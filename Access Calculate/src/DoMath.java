@@ -20,5 +20,7 @@ public class DoMath {
 		System.out.println(Calculate.max(3, 6, 2));
 		System.out.println(Calculate.min(3, 2));
 		System.out.println(Calculate.round2(3.6677));
+		System.out.println(Calculate.exponent(3, 2));
+		System.out.println(Calculate.factorial(4));
 	}
 }
