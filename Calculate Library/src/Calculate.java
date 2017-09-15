@@ -108,10 +108,14 @@ public class Calculate {
 		return num;
 	}
 	
-	public static boolean isPrime (int x) {
-		
+	public static boolean isPrime (int number) {
+		boolean prime = true;
+		number = (int) absValue(number);
+		if (number % 2 == 0) {
+			prime = false;
+		}
+		return prime;
 	}
-	
 	
 }	
 	
