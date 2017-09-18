@@ -117,5 +117,24 @@ public class Calculate {
 		return prime;
 	}
 	
-}	
+	public static int gcf (int factorOne, int factorTwo) {
+		int gcf = 1;
+		for (int i=1; i <= factorTwo; i++) {
+			if (isDivisibleBy(factorOne, i) && isDivisibleBy(factorTwo, i)) {
+				gcf = 1;
+			}
+		}
+		return gcf;
+	}
 	
+	public static double sqrt (double value) {
+		if (value < 0) {
+			throw new IllegalArgumentException("nonreal answer");
+		}
+		double number;
+		double squareRoot = value/2;
+		}
+		
+	}
+	
+

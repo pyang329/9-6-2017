@@ -23,5 +23,6 @@ public class DoMath {
 		System.out.println(Calculate.exponent(3, 2));
 		System.out.println(Calculate.factorial(4));
 		System.out.println(Calculate.isPrime(8));
+		System.out.println(Calculate.gcf(24, 6 ));
 	}
 }
