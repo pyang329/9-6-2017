@@ -40,7 +40,7 @@ public class Calculate {
 	
 	//calculates the discriminant of a quadratic function
 	public static double discriminant (double a, double b, double c) {
-		return (b * b)- (4* a * c);
+		return (b * b)- (4 * a * c);
 	}
 	
 	// changes a mixed number to an improper fraction
@@ -53,7 +53,7 @@ public class Calculate {
 		return (numerator/denominator) + "_" + (numerator % denominator) + "/" + (denominator);
 	}
 	
-	//foils a quadtractic function
+	//foils a quadratic function
 	public static String foil (int a, int b, int c, int d, String variable) {
 		return (a * c) + (variable) +"^2+" + ((a*d) + (b*c))+(variable) + (b*d);
 	}
@@ -141,7 +141,7 @@ public class Calculate {
 		int gcf = 1;
 		for (int i=1; i <= factorTwo; i++) {
 			if (isDivisibleBy(factorOne, i) && isDivisibleBy(factorTwo, i)) {
-				gcf = 1;
+				gcf = i;
 			}
 		}
 		return gcf;
@@ -162,8 +162,31 @@ public class Calculate {
 		return Calculate.round2(squareRoot);
 		}
 		
-	}
 
+	public static String quadForm (int a, int b, int c) {
+		double ad = a;
+		double bd = b;
+		double cd = c;
+		double dscrmnt = discriminant(ad,bd,cd);
+		if (dscrmnt < 0) {
+			return "no real roots";
+		}
+		double xAdd = ((-1* bd) + sqrt(dscrmnt))/ (2*ad);
+		double xSubtract = ((-1* bd) - sqrt(dscrmnt))/ (2*ad);
+		xAdd = round2(xAdd);
+		xSubtract = round2(xSubtract);
+		
+		if (xAdd == xSubtract) {
+			return (xAdd + "") ;
+		}
+		if (xAdd > xSubtract){
+			return (xSubtract + " and " + xAdd); 
+			}else{
+				return (xAdd + " and " + xSubtract);
+			}
+	}
+}
+	
 	
 
 
