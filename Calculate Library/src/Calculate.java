@@ -163,26 +163,23 @@ public class Calculate {
 		}
 		
 
+	// finds the roots of a quadratic function using the quadratic formula
 	public static String quadForm (int a, int b, int c) {
 		double ad = a;
 		double bd = b;
 		double cd = c;
-		double dscrmnt = discriminant(ad,bd,cd);
+		double dscrmnt = Calculate.discriminant(ad,bd,cd);
 		if (dscrmnt < 0) {
 			return "no real roots";
 		}
-		double xAdd = ((-1* bd) + sqrt(dscrmnt))/ (2*ad);
-		double xSubtract = ((-1* bd) - sqrt(dscrmnt))/ (2*ad);
-		xAdd = round2(xAdd);
-		xSubtract = round2(xSubtract);
-		
-		if (xAdd == xSubtract) {
-			return (xAdd + "") ;
-		}
-		if (xAdd > xSubtract){
-			return (xSubtract + " and " + xAdd); 
+		double xAdd = round2(((-1* bd) + Calculate.sqrt(dscrmnt))/ (2*ad));
+		double xSubtract = round2(((-1* bd) - Calculate.sqrt(dscrmnt))/ (2*ad));		
+		if (dscrmnt == 0) {
+			return xAdd + "";
+		}else if (xAdd > xSubtract){
+			return xSubtract + " and " + xAdd; 
 			}else{
-				return (xAdd + " and " + xSubtract);
+				return xAdd + " and " + xSubtract;
 			}
 	}
 }
