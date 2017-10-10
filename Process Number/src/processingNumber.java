@@ -1,4 +1,5 @@
-
+//Pauline Yang
+// 10/4/2017
 
 import java.util.Scanner;
 
