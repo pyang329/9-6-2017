@@ -5,13 +5,30 @@
 import java.util.Scanner;
 
 public class QuadraticClient {
-	public static void main (String [] args) {
+	public static void main(String[] args) {
+		//prints out full equation and its coefficient 
+		boolean done = false;
+		System.out.println("Welcome to the Quadratic Describer");
 		Scanner userInput = new Scanner(System.in);
 		System.out.println("a: ");
-		int a = userInput.nextInt();
+		double a = userInput.nextDouble();
 		System.out.println("b: ");
-		int b = userInput.nextInt();
+		double b = userInput.nextDouble();
 		System.out.println("c: ");
-		int c = userInput.nextInt();		
-	}	
+		double c = userInput.nextDouble();
+		System.out.println();
+		System.out.println("Description of the graph of: ");
+		System.out.println("y = " + a + "x^2 " + b + "x " + c);
+		System.out.println();
+		
+		//determines if graph opens up or down
+		if (a > 0) {
+			System.out.println("Opens: Up");
+		}else {
+			System.out.println("Opens: Down");
+		}
+		
+		//determines the axis of symmetry
+		double axisOfSymmetry = (-1* b)/(2*a);
+		System.out.println("Axis of Symmetry: " + axisOfSymmetry);	
 }
