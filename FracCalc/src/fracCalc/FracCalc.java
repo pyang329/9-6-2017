@@ -13,7 +13,6 @@ public class FracCalc {
     			input = sc.nextLine();
     			System.out.println(produceAnswer(input));
     		} while (input != "quit");
-
     }
     
     // ** IMPORTANT ** DO NOT DELETE THIS FUNCTION.  This function will be used to test your code
@@ -31,7 +30,7 @@ public class FracCalc {
         String firstOperand = separateIntoParts[0];
         String operator = separateIntoParts[1];
         String secondOperand = separateIntoParts[2];
-        int[] parsedFirstOperand = parseOperand(firstOperand);
+        //int[] parsedFirstOperand = parseOperand(firstOperand);
 		int[] parsedSecondOperand = parseOperand(secondOperand);
 		String whole = "whole:" + parsedSecondOperand[0];
 		String numerator = " numerator:" + parsedSecondOperand[1];
@@ -42,17 +41,21 @@ public class FracCalc {
 
     // TODO: Fill in the space below with any helper methods that you think you will need
     public static int [] parseOperand (String operand) {
-    		String[] wholeNumber = operand.split("_");
-		String[] splitFraction = wholeNumber[1].split("/");
-		String[] threeDigitsSort = {wholeNumber[0], splitFraction[0], splitFraction[1]};
-		if (splitFraction[0] == "0") {
-			splitFraction [1] = "1";
+    		int wholeNum = 0;
+		int numerator = 0;
+		int denominator = 1;
+		if (operand.indexOf('_') >= 0) {
+			wholeNum = Integer.parseInt(operand.substring(0, operand.indexOf('_')));
+			numerator = Integer.parseInt(operand.substring(operand.indexOf('_') + 1, operand.indexOf('/')));
+			denominator = Integer.parseInt(operand.substring(operand.indexOf('/') + 1));
+		} else if(operand.indexOf('/') >= 0){
+			numerator = Integer.parseInt(operand.substring(0, operand.indexOf('/')));
+			denominator = Integer.parseInt(operand.substring(operand.indexOf('/') + 1));
+		}else{
+			wholeNum = Integer.parseInt(operand);
 		}
-		int[] intsInOrder = new int[3];
-	    for (int i=0; i < threeDigitsSort.length; i++) {
-	    		intsInOrder[i] = Integer.parseInt(threeDigitsSort[i]);
-	    }
-	    return intsInOrder;
+		int [] threeIntsOfFraction = {wholeNum, numerator, denominator};
+	    return threeIntsOfFraction;
     }
     
 }
