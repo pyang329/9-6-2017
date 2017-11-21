@@ -34,13 +34,16 @@ public class FracCalc {
 		int[] parsedSecondOperand = parseOperand(secondOperand);
 		String impropFracFirst = toImproperFrac(parsedFirstOperand[0],parsedFirstOperand[1],parsedFirstOperand[2] );
 		String impropFracSecond = toImproperFrac(parsedSecondOperand[0],parsedSecondOperand[1],parsedSecondOperand[2] );
-        	int[] parsedImpropFrist = parseOperand(impropFracFirst);
+        	int[] parsedImpropFirst = parseOperand(impropFracFirst);
         	int[] parsedImpropSecond = parseOperand(impropFracSecond);
-        //	if (input.indexOf("+") >= 0) {
-        		
-        	//}
-        	String num = "numerator" + parsedImpropFrist[1];
-        	return num;
+        	int numerator;
+        	int denominator;
+        if (operator.equals("+")) {
+        		if(parsedFirstOperand[0] <= 0) {
+        			numerator = (parsedImpropFirst[1] * parsedImpropSecond[2]);
+        		}
+        		denominator = parsedImpropFirst[2] * parsedImpropSecond[2];	
+        	}
     }
     
 
