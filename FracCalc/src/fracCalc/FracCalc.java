@@ -30,12 +30,17 @@ public class FracCalc {
         String firstOperand = separateIntoParts[0];
         String operator = separateIntoParts[1];
         String secondOperand = separateIntoParts[2];
-        //int[] parsedFirstOperand = parseOperand(firstOperand);
+        int[] parsedFirstOperand = parseOperand(firstOperand);
 		int[] parsedSecondOperand = parseOperand(secondOperand);
-		String whole = "whole:" + parsedSecondOperand[0];
-		String numerator = " numerator:" + parsedSecondOperand[1];
-		String denominator = " denominator:" + parsedSecondOperand[2];
-        return whole + numerator + denominator;
+		String impropFracFirst = toImproperFrac(parsedFirstOperand[0],parsedFirstOperand[1],parsedFirstOperand[2] );
+		String impropFracSecond = toImproperFrac(parsedSecondOperand[0],parsedSecondOperand[1],parsedSecondOperand[2] );
+        	int[] parsedImpropFrist = parseOperand(impropFracFirst);
+        	int[] parsedImpropSecond = parseOperand(impropFracSecond);
+        //	if (input.indexOf("+") >= 0) {
+        		
+        	//}
+        	String num = "numerator" + parsedImpropFrist[1];
+        	return num;
     }
     
 
@@ -57,6 +62,10 @@ public class FracCalc {
 		int [] threeIntsOfFraction = {wholeNum, numerator, denominator};
 	    return threeIntsOfFraction;
     }
+    
+    public static String toImproperFrac (int whole, int numerator, int denominator) {
+		 return ((whole * denominator) + numerator) + "/" + (denominator);	
+	}
     
 }
 
