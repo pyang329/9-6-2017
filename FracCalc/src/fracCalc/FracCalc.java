@@ -1,20 +1,24 @@
-// Pauline Yang
-// 11/21/2017
-// APCS Period 2
 package fracCalc;
-import java.util.Arrays;
-import java.util.Scanner; 
+import java.util.Scanner;
+
+/* Herman Peng
+ * 1st period
+ * December 5th, 2016
+ * StringSplit Assignment
+ */
 public class FracCalc {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) 
+    {
         // TODO: Read the input from the user and call produceAnswer with an equation
-    		String input;
-    		Scanner sc = new Scanner(System.in);
-    		do {
-    			System.out.println("Please enter in your input. Type quit to exit.");
-    			input = sc.nextLine();
-    			System.out.println(produceAnswer(input));
-    		} while (input != "quit");
+    	Scanner console = new Scanner(System.in);
+    	do
+    	{
+    	String input = console.nextLine();
+    	if (input.equals("quit"))
+    		break;
+    	System.out.println(produceAnswer(input));
+    	} while(true);
     }
     
     // ** IMPORTANT ** DO NOT DELETE THIS FUNCTION.  This function will be used to test your code
@@ -25,101 +29,137 @@ public class FracCalc {
     //        
     // The function should return the result of the fraction after it has been calculated
     //      e.g. return ==> "1_1/4"
-    public static String produceAnswer(String input){ 
-        // TODO: Implement this function to produce the solution to the input
-        String [] inputString = new String [input.length()];
-        String [] separateIntoParts = input.split(" ");
-        String firstOperand = separateIntoParts[0];
-        String operator = separateIntoParts[1];
-        String secondOperand = separateIntoParts[2];
-        int[] parsedFirstOperand = parseOperand(firstOperand);
-		int[] parsedSecondOperand = parseOperand(secondOperand);
-		int[] impropFracFirst = toImproperFrac(parsedFirstOperand);
-		int[] impropFracSecond = toImproperFrac(parsedSecondOperand);
-		int[] commonFractions = commonDenominator(impropFracFirst,impropFracSecond);
-        	int numerator;
-        	int denominator;
-        	String strNumer;
-        	String strDenomi;
-        	String answer;
-        	if (parsedFirstOperand[2] == 0 || parsedSecondOperand[2] == 0) {
-            	return "Invalid Answer. Cannot divide by 0.";
-        	}
-        if (operator.equals("+")) {
-        		numerator = (commonFractions[0] + commonFractions[1]);
-        		strNumer = Integer.toString(numerator);
-        		answer = strNumer + "/" + commonFractions[2];
-        		return answer;
-        	} else if(operator.equals("-")) {
-        		numerator = (commonFractions[0] - commonFractions[1]);
-        		strNumer = Integer.toString(numerator);
-        		answer = strNumer + "/" + commonFractions[2];
-        		return answer;
-        	} else if(operator.equals("*")) {
-        		numerator = (commonFractions[0] * commonFractions[1]);
-        		denominator = (commonFractions[2] * commonFractions[2]);
-        		strNumer = Integer.toString(numerator);
-        		strDenomi = Integer.toString(denominator);
-        		answer = strNumer + "/" + strDenomi;
-        		return answer;
-        	} else if (operator.equals("/")) {
-        		numerator = (commonFractions[0] * commonFractions[2]);
-        		denominator = (commonFractions[1] * commonFractions[2]);
-        		strNumer = Integer.toString(numerator);
-        		strDenomi = Integer.toString(denominator);
-        		answer = strNumer + "/" + strDenomi;
-        		return answer;
-        	} else {
-        		String error = "Unexpected error.";
-    			return error;
-        	}
+    public static String produceAnswer(String input)
+    { 
+    	//Splits user input into array
+        String[] terms = input.split(" ");
+        String firstString = terms[0];
+        String operator = terms[1];
+        String secondString = terms[2];
+        
+        /*
+         * Activates code to handle multiple operations
+         * later on if multiple operations exist
+         */
+        boolean multiOp = false;
+        if (terms.length > 3)
+        	multiOp = true;
+        
+        //Receives output from parse()
+        Fraction firstFrac = parse(firstString);
+        Fraction secondFrac = parse(secondString);
+        
+        /*
+         * Returns an error if the input contains a fraction
+         * with a denominator of 0
+         */
+        if (firstFrac.getDenom() == 0 || secondFrac.getDenom() == 0)
+        	return "Umm... why are you trying to divide by zero...?";
+        
+        //Initialize array to contain result of calculation
+        Fraction resultFrac = new Fraction(0, 0, 1);
+        
+        /*
+         * Switch statement checks operator and performs
+         * corresponding calculations
+         */
+        switch (operator)
+        {
+        	case "+":
+        		resultFrac = firstFrac.add(secondFrac);
+        		break;
+        	case "-":
+        		resultFrac = firstFrac.subtract(secondFrac);
+        		break;
+        	case "*":
+        		resultFrac = firstFrac.multiply(secondFrac);
+        		break;
+        	case "/":
+        		resultFrac = firstFrac.divide(secondFrac);
+        		break;
+        	default:
+        		return "Hey! That's an invalid format! Did you even pass elementary school math?!";
+        }
+        resultFrac.reduce();
+        String result = resultFrac.toString();
+        
+        if (multiOp) {
+        	String temp = result;
+        	for(int i = 4; i < terms.length; i += 2)
+    		temp += " " + terms[i - 1] + " " + terms[i];
+    		result = produceAnswer(temp);
+        }
+        return result;
     }
     
+    public static Fraction parse(String input)
+    {
+    	//Initializes with default values
+    	int whole = 0;
+        int numer = 0;
+        int denom = 1;
+        
+        
+        //Parses as a mixed number if "_" exists
+        if (input.indexOf('_') >= 0)
+        {
+        	whole = Integer.parseInt(input.substring(0, input.indexOf('_')));
+        	numer = Integer.parseInt(input.substring(input.indexOf('_') + 1, input.indexOf('/')));
+        	denom = Integer.parseInt(input.substring(input.indexOf('/') + 1));
+        }
+        /*
+         * Parses as a fraction if "/" exists
+         * and does not contain "_"
+         */
+        else if (input.indexOf('/') >= 0)
+        {
+        	numer = Integer.parseInt(input.substring(0, input.indexOf('/')));
+        	denom = Integer.parseInt(input.substring(input.indexOf('/') + 1));
+        }
+        /*
+         * Parses as a whole number if neither
+         * "_" nor "/" exist
+         */
+        else
+        	whole = Integer.parseInt(input);
+        
+        //Initializes return array with the parse results
+        Fraction frac = new Fraction(whole, numer, denom);
+        
+        //Returns array
+        return frac;
+    }
 
     // TODO: Fill in the space below with any helper methods that you think you will need
-    public static int [] parseOperand (String operand) {
-    		int wholeNum = 0;
-		int numerator = 0;
-		int denominator = 1;
-		if (operand.indexOf('_') >= 0) {
-			wholeNum = Integer.parseInt(operand.substring(0, operand.indexOf('_')));
-			numerator = Integer.parseInt(operand.substring(operand.indexOf('_') + 1, operand.indexOf('/')));
-			denominator = Integer.parseInt(operand.substring(operand.indexOf('/') + 1));
-		} else if(operand.indexOf('/') >= 0){
-			numerator = Integer.parseInt(operand.substring(0, operand.indexOf('/')));
-			denominator = Integer.parseInt(operand.substring(operand.indexOf('/') + 1));
-		}else{
-			wholeNum = Integer.parseInt(operand);
-		}
-		int [] threeIntsOfFraction = {wholeNum, numerator, denominator};
-	    return threeIntsOfFraction;
-    }
-    
-    public static int[] toImproperFrac(int[] operand){
-		if(operand[0] < 0) {
-			operand[1] = operand[2] * operand[0] - operand[1];
-		} else {
-			operand[1] = operand[2] * operand[0] + operand[1];
-		}
-		int[] improperFraction = {operand[1], operand[2]};
-		return improperFraction;
-    
-    }
-    public static int[] commonDenominator(int[] firstOperand, int[] secondOperand){
-		int firstNumerator = firstOperand[0] * secondOperand[1];
-		int secondNumerator = secondOperand[0] * firstOperand[1];
-		int denominator = firstOperand[1] * secondOperand[1];
-		int[] CommonFrac = {firstNumerator, secondNumerator, denominator};
-		return CommonFrac;
+    public static int gcf(int num1, int num2) {
+		/* i is declared before the for loop because
+		 * it must be returned after the loop.
+		 */
+		int i;
+		/* i can be initialized as either of
+		 * the two inputs because any number
+		 * greater than the smaller of the two
+		 * is inherently invalid. The for loop
+		 * continues while one of the numbers
+		 * is not divisible by i.
+		 */
+		num1 = Math.abs(num1);
+		num2 = Math.abs(num2);
+		for(i = num2; !(isDivisibleBy(num2, i) && isDivisibleBy(num1, i)); i--) {}
+		return i;
 	}
     
- 
+    public static boolean isDivisibleBy(int dividend, int divisor) {
+		/* An IllegalArgumentException will be thrown when the divisor
+		 * is 0 because you cannot divide by 0.
+		 */
+		if(divisor == 0) {
+			throw new IllegalArgumentException();
+		}
+		if(dividend % divisor == 0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 }
-
-
-
-
-
-
-
-
