@@ -1,114 +1,176 @@
 package fracCalc;
 
 public class Fraction {
-	private int whole;
-	private int numer;
-	private int denom;
-	public Fraction(int whole, int numer, int denom) {
-		this.whole = whole;
-		this.numer = numer;
-		this.denom = denom;
+	private int wholeNum = 0;
+	private int numerator = 0;
+	private int denominator = 1;
+	/*private String sign;
+	private String Operand;
+	private String wholeString;
+	private String numString;
+	private String denomString;*/
+	//constructs fraction with given numbers
+	public Fraction (String frac) {
+		if (frac.contains("/") && frac.contains("_")) {
+			wholeNum = Integer.parseInt(frac.split("_")[0]);
+			numerator = Integer.parseInt(frac.split("_")[1].split("/")[0]);
+			denominator = Integer.parseInt(frac.split("/")[1]);	
+		}else if(frac.contains("/")) {
+			numerator = Integer.parseInt(frac.split("/")[0]);
+			denominator = Integer.parseInt(frac.split("/")[1]);
+		}else {
+			wholeNum = Integer.parseInt(frac);
+		}
+		toImproperFrac();
 	}
+	
+	//sets default values for fraction
+	public Fraction(){
+		this(0,0,1);
+	}
+	
+	//takes fraction that has no whole number
+	public Fraction(int numerator, int denominator) {
+		this(0, numerator, denominator);
+	}
+	
+	//constructor that constructs fraction with given numbers
+	public Fraction (int whole, int numer, int denom) {
+		this.wholeNum = whole;
+		this.numerator = numer;
+		this.denominator = denom;
+		toImproperFrac();
+		}
+	
+	public Fraction(Fraction frac) {
+		this(frac.getWhole(), frac.getNumer(), frac.getDenom());
+	}
+	
+	public Fraction add(Fraction input) {
+		Fraction result = new Fraction();
+		result.setNumer(this.numerator * input.getDenom() + input.getNumer() * this.denominator);
+		result.setDenom(this.denominator * input.getDenom());
+		return result;
+	}
+	
+	public void changeSign() {
+		if(wholeNum == 0) {
+			numerator *= -1;
+		}else {
+			wholeNum *= -1;
+		}
+	}
+	
+	/*public Fraction subtract(Fraction input) {
+		Fraction result = new Fraction();
+		result.setNumer(this.numerator * input.getDenom() - input.getNumer());
+		result.setDenom(this.numerator * input.getDenom());
+		return result;
+	}*/
+	
+	public Fraction multiply(Fraction input) {
+		Fraction result = new Fraction(this.numerator * input.getNumer(), this.denominator * input.getDenom());
+		return result;
+	}
+	
+	public void reciprocate() {
+		if(numerator < 0) {
+			denominator *= -1;
+			numerator *= -1;
+		}
+		int newNum = numerator;
+		numerator = denominator;
+		denominator = newNum;
+	}
+	
+	
+	/*public Fraction divide(Fraction input) {
+		Fraction result = new Fraction();
+		result.setNumer(this.numerator * input.getDenom());
+		result.setDenom(this.denominator * input.getNumer());
+		return result;
+	}*/
+	
+	public void toImproperFrac() {
+		if(wholeNum < 0 && numerator > 0) {
+			numerator *= -1;
+		}
+		numerator = wholeNum * denominator + numerator;
+		wholeNum = 0;
+	}
+	
+	//
+	public void toMixedNum() {
+		wholeNum = numerator/denominator + wholeNum;
+		if(wholeNum != 0){ 
+			numerator = Math.abs(numerator);
+		}
+		numerator = numerator % denominator;
+	}
+	
+	//simplifies the fraction 
+		public void simplify() {
+			toMixedNum();
+			int gcf = greatestcomfact(numerator, denominator);
+			numerator /= gcf;
+			denominator /= gcf;
+		}
+	
+	//finds the greatest common factor if two integers
+	public static int greatestcomfact(int numOne, int numTwo) {
+		numOne = Math.abs(numOne);
+		numTwo = Math.abs(numTwo);
+		int gcf = 1; 
+		for(int i =1; i<= numTwo; i++) {
+			if((numOne % i == 0) && (numTwo % i == 0)) {
+				gcf = i; 
+			}
+		}
+		return gcf;
+	}
+	
+	public boolean ifDenomZero() {
+		if(denominator == 0) {
+			return true;
+		}else {
+			return false;
+		}
+	}
+	
+	//returns fraction parts into one fraction string
 	public String toString() {
-		String input = whole + "_" + numer + "/" + denom;
+		toMixedNum();
+		if(wholeNum == 0) {
+			if(numerator == 0) {
+				return "0";
+			}
+			return numerator + "/" + denominator;
+		}
+		if (numerator == 0) {
+			return "" + wholeNum;
 
-    	if (input.startsWith("0_"))
-        	input = input.substring(2);
-    	
-    	if (input.indexOf("_0/") > 0)
-    		input = input.substring(0, input.indexOf("_0/"));
-    	else if (input.indexOf("0/") == 0)
-    		input = "0";
-    	
-    	if (input.endsWith("/1"))
-    		input = input.substring(0, input.length() - 2);
-    	
-    	return input;
+		}
+		return wholeNum + "_" + numerator + "/" + denominator;
 	}
-	public int getDenom() {
-		return denom;
+	
+	//getters and setters for the fraction
+	public int getWhole () {
+		return wholeNum;	
 	}
-	public Fraction add(Fraction frac) {
-		int resultNumer;
-        int resultDenom;
-		if (this.whole < 0)
-			resultNumer = (this.whole * this.denom - this.numer) * frac.denom;
-		else
-			resultNumer = (this.whole * this.denom + this.numer) * frac.denom;
-		
-		if (frac.whole < 0)
-			resultNumer += (frac.whole * frac.denom - frac.numer) * this.denom;
-		else
-			resultNumer += (frac.whole * frac.denom + frac.numer) * this.denom;
-		
-		resultDenom = this.denom * frac.denom;
-		Fraction result = new Fraction(0, resultNumer, resultDenom);
-		return result;
+	public void setWhole(int wholeNumber) {
+		this.wholeNum = wholeNumber;
 	}
-	public Fraction subtract(Fraction frac) {
-		int resultNumer;
-        int resultDenom;
-		if (this.whole < 0)
-			resultNumer = (this.whole * this.denom - this.numer) * frac.denom;
-		else
-			resultNumer = (this.whole * this.denom + this.numer) * frac.denom;
-		
-		if (frac.whole < 0)
-			resultNumer -= (frac.whole * frac.denom - frac.numer) * this.denom;
-		else
-			resultNumer -= (frac.whole * frac.denom + frac.numer) * this.denom;
-		
-		resultDenom = this.denom * frac.denom;
-		Fraction result = new Fraction(0, resultNumer, resultDenom);
-		return result;
+	public int getNumer () {
+		return numerator;
 	}
-	public Fraction multiply(Fraction frac) {
-		int resultNumer;
-        int resultDenom;
-		if (this.whole < 0)
-			resultNumer = this.whole * this.denom - this.numer;
-		else
-			resultNumer = this.whole * this.denom + this.numer;
-		
-		if (frac.whole < 0)
-			resultNumer *= frac.whole * frac.denom - frac.numer;
-		else
-			resultNumer *= frac.whole * frac.denom + frac.numer;
-		
-		resultDenom = this.denom * frac.denom;
-		Fraction result = new Fraction(0, resultNumer, resultDenom);
-		return result;
+	public void setNumer(int numer) {
+		this.numerator = numer;
 	}
-	public Fraction divide(Fraction frac) {
-		int resultNumer;
-        int resultDenom;
-		if (this.whole < 0)
-			resultNumer = (this.whole * this.denom - this.numer) * frac.denom;
-		else
-			resultNumer = (this.whole * this.denom + this.numer) * frac.denom;
-		
-		if (frac.whole < 0)
-			resultDenom = (frac.whole * frac.denom - frac.numer) * this.denom;
-		else
-			resultDenom = (frac.whole * frac.denom + frac.numer) * this.denom;
-		Fraction result = new Fraction(0, resultNumer, resultDenom);
-		return result;
+	
+	public int getDenom () {
+		return denominator;
 	}
-	public void reduce() {
-		if (denom < 0)
-    	{
-    		numer *= -1;
-    		denom *= -1;
-    	}
-    	
-    	whole += numer / denom;
-    	numer %= denom;
-    	
-    	int gcf = FracCalc.gcf(numer, denom);
-    	numer /= gcf;
-    	denom /= gcf;
-    	
-    	if (whole < 0 && numer < 0)
-    		numer *= -1;
+	public void setDenom(int denom) {
+		this.denominator = denom;
 	}
-}
+}	

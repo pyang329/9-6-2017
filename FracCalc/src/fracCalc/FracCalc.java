@@ -1,24 +1,17 @@
 package fracCalc;
 import java.util.Scanner;
 
-/* Herman Peng
- * 1st period
- * December 5th, 2016
- * StringSplit Assignment
- */
 public class FracCalc {
 
-    public static void main(String[] args) 
-    {
+	public static void main(String[] args) {
         // TODO: Read the input from the user and call produceAnswer with an equation
-    	Scanner console = new Scanner(System.in);
-    	do
-    	{
-    	String input = console.nextLine();
-    	if (input.equals("quit"))
-    		break;
-    	System.out.println(produceAnswer(input));
-    	} while(true);
+    		String input;
+    		Scanner sc = new Scanner(System.in);
+    		do {
+    			System.out.println("Please enter in your input. Type quit to exit.");
+    			input = sc.nextLine();
+    			System.out.println(produceAnswer(input));
+    		} while (input != "quit");
     }
     
     // ** IMPORTANT ** DO NOT DELETE THIS FUNCTION.  This function will be used to test your code
@@ -29,137 +22,113 @@ public class FracCalc {
     //        
     // The function should return the result of the fraction after it has been calculated
     //      e.g. return ==> "1_1/4"
-    public static String produceAnswer(String input)
-    { 
-    	//Splits user input into array
-        String[] terms = input.split(" ");
-        String firstString = terms[0];
-        String operator = terms[1];
-        String secondString = terms[2];
-        
-        /*
-         * Activates code to handle multiple operations
-         * later on if multiple operations exist
-         */
-        boolean multiOp = false;
-        if (terms.length > 3)
-        	multiOp = true;
-        
-        //Receives output from parse()
-        Fraction firstFrac = parse(firstString);
-        Fraction secondFrac = parse(secondString);
-        
-        /*
-         * Returns an error if the input contains a fraction
-         * with a denominator of 0
-         */
-        if (firstFrac.getDenom() == 0 || secondFrac.getDenom() == 0)
-        	return "Umm... why are you trying to divide by zero...?";
-        
-        //Initialize array to contain result of calculation
-        Fraction resultFrac = new Fraction(0, 0, 1);
-        
-        /*
-         * Switch statement checks operator and performs
-         * corresponding calculations
-         */
-        switch (operator)
-        {
-        	case "+":
-        		resultFrac = firstFrac.add(secondFrac);
-        		break;
-        	case "-":
-        		resultFrac = firstFrac.subtract(secondFrac);
-        		break;
-        	case "*":
-        		resultFrac = firstFrac.multiply(secondFrac);
-        		break;
-        	case "/":
-        		resultFrac = firstFrac.divide(secondFrac);
-        		break;
-        	default:
-        		return "Hey! That's an invalid format! Did you even pass elementary school math?!";
+    public static String produceAnswer(String input){ 
+        // TODO: Implement this function to produce the solution to the input
+        String [] parsedOperand = input.split(" ");
+        if(parsedOperand.length % 2 == 0 || parsedOperand.length == 1) {
+    		return "ERROR. Check your expression.";
         }
-        resultFrac.reduce();
-        String result = resultFrac.toString();
-        
-        if (multiOp) {
-        	String temp = result;
-        	for(int i = 4; i < terms.length; i += 2)
-    		temp += " " + terms[i - 1] + " " + terms[i];
-    		result = produceAnswer(temp);
-        }
-        return result;
+        	String finalString = "";
+        	Fraction firstOperand = new Fraction (parsedOperand[0]);
+        	Fraction secondOperand;
+        	Fraction result;
+        	for(int i = 2; i < parsedOperand.length; i += 2) {
+        		secondOperand = new Fraction(parsedOperand[i]);
+        		String operator = parsedOperand[i-1];
+        		
+        		if(firstOperand.ifDenomZero() || secondOperand.ifDenomZero()){
+        			return "Invalid Answer. Cannot divide by 0.";
+        		}
+        		if(operator.equals("+")) {
+        			result = firstOperand.add(secondOperand);
+        		} else if(operator.equals("-")) {
+        			secondOperand.changeSign();
+        			result = firstOperand.add(secondOperand);
+        		} else if(operator.equals("*")) {
+        			result = firstOperand.multiply(secondOperand);
+        		} else if(operator.equals("/")) {
+        			secondOperand.reciprocate();
+        			if(secondOperand.ifDenomZero()) {
+        				return "Error. Cannot divide by zero.";
+        			}
+        			result = firstOperand.multiply(secondOperand);
+        		}else {
+        			return "Unexpected error.";
+        		}
+        		firstOperand = new Fraction (result);
+        		result.simplify();
+        		finalString = result.toString();
+        		System.out.println(finalString);
+        	}
+        	return finalString;
     }
     
-    public static Fraction parse(String input)
-    {
-    	//Initializes with default values
-    	int whole = 0;
-        int numer = 0;
-        int denom = 1;
-        
-        
-        //Parses as a mixed number if "_" exists
-        if (input.indexOf('_') >= 0)
-        {
-        	whole = Integer.parseInt(input.substring(0, input.indexOf('_')));
-        	numer = Integer.parseInt(input.substring(input.indexOf('_') + 1, input.indexOf('/')));
-        	denom = Integer.parseInt(input.substring(input.indexOf('/') + 1));
-        }
-        /*
-         * Parses as a fraction if "/" exists
-         * and does not contain "_"
-         */
-        else if (input.indexOf('/') >= 0)
-        {
-        	numer = Integer.parseInt(input.substring(0, input.indexOf('/')));
-        	denom = Integer.parseInt(input.substring(input.indexOf('/') + 1));
-        }
-        /*
-         * Parses as a whole number if neither
-         * "_" nor "/" exist
-         */
-        else
-        	whole = Integer.parseInt(input);
-        
-        //Initializes return array with the parse results
-        Fraction frac = new Fraction(whole, numer, denom);
-        
-        //Returns array
-        return frac;
-    }
 
     // TODO: Fill in the space below with any helper methods that you think you will need
-    public static int gcf(int num1, int num2) {
-		/* i is declared before the for loop because
-		 * it must be returned after the loop.
-		 */
-		int i;
-		/* i can be initialized as either of
-		 * the two inputs because any number
-		 * greater than the smaller of the two
-		 * is inherently invalid. The for loop
-		 * continues while one of the numbers
-		 * is not divisible by i.
-		 */
-		num1 = Math.abs(num1);
-		num2 = Math.abs(num2);
-		for(i = num2; !(isDivisibleBy(num2, i) && isDivisibleBy(num1, i)); i--) {}
-		return i;
+/*    public static int [] parseOperand (String operand) {
+    		int wholeNum = 0;
+		int numerator = 0;
+		int denominator = 1;
+		if (operand.indexOf('_') >= 0) {
+			wholeNum = Integer.parseInt(operand.substring(0, operand.indexOf('_')));
+			numerator = Integer.parseInt(operand.substring(operand.indexOf('_') + 1, operand.indexOf('/')));
+			denominator = Integer.parseInt(operand.substring(operand.indexOf('/') + 1));
+		} else if(operand.indexOf('/') >= 0){
+			numerator = Integer.parseInt(operand.substring(0, operand.indexOf('/')));
+			denominator = Integer.parseInt(operand.substring(operand.indexOf('/') + 1));
+		}else{
+			wholeNum = Integer.parseInt(operand);
+		}
+		int [] threeIntsOfFraction = {wholeNum, numerator, denominator};
+	    return threeIntsOfFraction;
+    }
+    
+    public static String simplify(int[] input) {
+		int wholeNum = input[0] / input[1];
+		 int numer = input[0]%input[1];
+		 int denom = input[1];
+			String returnStrg = "";
+			if (wholeNum != 0) {
+			 numer = absValue(numer);
+		 }
+			int gcfFrac= gcf(numer, denom);
+			numer /= gcfFrac;
+			denom /= gcfFrac;
+		if (wholeNum == 0) {
+			if(numer == 0){
+				return "0";
+			}
+				return numer + "/" + denom;
+	}
+		if(numer == 0) {
+			return "" + wholeNum;
+		}
+		return wholeNum + "_" + numer + "/" + denom;
 	}
     
-    public static boolean isDivisibleBy(int dividend, int divisor) {
-		/* An IllegalArgumentException will be thrown when the divisor
-		 * is 0 because you cannot divide by 0.
-		 */
-		if(divisor == 0) {
-			throw new IllegalArgumentException();
-		}
-		if(dividend % divisor == 0) {
+	public static boolean isDivisibleBy (int numOne, int numTwo) {
+		if (numOne%numTwo == 0) {
 			return true;
-		} else {
-			return false;
+		}else{
+				return false; 
 		}
 	}
+	
+	public static int gcf(int numOne, int numTwo){
+		int gcf = 1; 
+		for(int i =1; i<= numTwo; i++) {
+			if(isDivisibleBy(numOne, i) && isDivisibleBy(numTwo, i)) {
+				gcf = i; 
+			}
+		}
+		return gcf;
+	}
+
+	public static int absValue (int value) {
+		if (value < 0) {
+			return value*-1;
+		}else {
+			return value;
+		}
+	}*/
 }
