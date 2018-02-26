@@ -1,4 +1,5 @@
-
+//Pauline Yang
+//Period 2
 public class MakeShape {
 
 	public static void main(String[] args) 

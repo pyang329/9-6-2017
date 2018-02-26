@@ -1,3 +1,5 @@
+//Pauline Yang
+//Period 2
 /* Write this abstract class called Prism.  It has one private field (height) and a constructor.  
  * It contains the methods calcAreaOfBase, calcPerimeter, calcVolume, and calcSA.
  * None of these methods require parameters.   
@@ -10,7 +12,7 @@
  */
 
 
-public class Prism  
+public abstract class Prism  
 {
 	private double height;
 
@@ -33,7 +35,7 @@ public class Prism
 		return height;
 	}
 	
-	public double setHeight(double h){
+	public void setHeight(double h){
 		this.height = h;
 	}
 }
